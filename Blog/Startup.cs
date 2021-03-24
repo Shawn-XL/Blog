@@ -22,7 +22,7 @@ namespace Blog
         {
 
             services.AddControllersWithViews();
-
+            services.AddControllers();
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
