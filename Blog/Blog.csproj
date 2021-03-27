@@ -27,6 +27,7 @@
     <Folder Include="Models\" />
     <Folder Include="Services\" />
     <Folder Include="Database\" />
+    <Folder Include="Tools\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClientApp\README.md" />
