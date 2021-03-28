@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Blog.Services;
 
 namespace Blog
 {
@@ -24,6 +25,7 @@ namespace Blog
         {
 
             services.AddControllers();
+            services.AddTransient<IArticleRepository, ArticleRepository>();
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -31,7 +33,7 @@ namespace Blog
             });
             services.AddDbContext<AppDbContext>(b =>
             {
-                b.UseSqlServer();
+                b.UseSqlServer(Configuration["DbContext:ConnectString"]);
             });
 
         }

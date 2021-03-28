@@ -4,7 +4,7 @@ using Blog.Models;
 
 namespace Blog.Services
 {
-    public interface IArticleRespository
+    public interface IArticleRepository
     {
         IEnumerable<Article> GetArticles();
 
