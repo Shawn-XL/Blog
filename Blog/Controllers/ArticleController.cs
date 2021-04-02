@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blog.Models;
 using Blog.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,7 +12,7 @@ namespace Blog.Controllers
 {
     [Route("/api/[controller]")]
     [ApiController]
-    public class ArticleController : Controller
+    public class ArticleController : ControllerBase
     {
         private IArticleRepository _articleRepository;
 
@@ -20,23 +21,28 @@ namespace Blog.Controllers
             _articleRepository = articleRepository;
         }
 
-        [Route("/test")]
-        public IActionResult Index()
-        {
-            return Ok("index action get called");
-        }
 
         [HttpGet]
         public IActionResult GetArticles()
         {
-            var articles = _articleRepository.GetArticles();
-            return Ok(articles);
+            var articlesFromRepo = _articleRepository.GetArticles();
+            if(articlesFromRepo == null || articlesFromRepo.Count() < 0)
+            {
+                return NotFound("No Article Found");
+            }
+            return Ok(articlesFromRepo);
         }
+
         [HttpGet("{articleId}")]
         public IActionResult GetArticle(Guid articleId)
         {
-            var articles = _articleRepository.GetArticle(articleId);
-            return Ok(articles);
+            Article articleFromRepo = _articleRepository.GetArticle(articleId);
+            if(articleFromRepo == null)
+            {
+                return NotFound("No Article Found");
+            }
+            
+            return Ok(articleFromRepo);
         }
     }
 }

@@ -21,5 +21,8 @@ namespace Blog.Models
 
         public ICollection<ArticlePicture> ArticlePictures { get; set; }
             = new List<ArticlePicture>();
+
+        public ICollection<Tag> ArticleTags { get; set; }
+            = new List<Tag>();
     }
 }

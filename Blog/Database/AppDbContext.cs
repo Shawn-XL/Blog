@@ -25,6 +25,7 @@ namespace Blog.Database
             var articleJson = File.ReadAllText(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"/Database/Articles.json");
             IList<Article> articles = JsonConvert.DeserializeObject<IList<Article>>(articleJson);
             modelBuilder.Entity<Article>().HasData(articles);
+
             base.OnModelCreating(modelBuilder);
         }
 

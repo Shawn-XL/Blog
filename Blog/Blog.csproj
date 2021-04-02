@@ -40677,6 +40677,9 @@
     <None Include="ClientApp\node_modules\%40hapi\hoek\lib\escapeRegex.js" />
     <None Include="ClientApp\node_modules\%40hapi\hoek\lib\index.d.ts" />
     <None Include="ClientApp\node_modules\%40hapi\hoek\lib\bench.js" />
+    <None Include="ClientApp\src\pages\article\store\actionTypes.js" />
+    <None Include="ClientApp\src\Admin.js" />
+    <None Include="ClientApp\src\Visitor.js" />
   </ItemGroup>
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
     <!-- Ensure Node.js is installed -->
