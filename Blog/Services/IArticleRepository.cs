@@ -9,5 +9,9 @@ namespace Blog.Services
         IEnumerable<Article> GetArticles();
 
         Article GetArticle(Guid articleId);
+
+        bool ArticleExists(Guid articleId);
+
+        List<ArticlePicture> GetPicturesByArticleId(Guid articleId);
     }
 }

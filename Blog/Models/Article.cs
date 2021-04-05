@@ -17,12 +17,14 @@ namespace Blog.Models
         [MaxLength]
         public string Content { get; set; }
 
+        public bool IsHide { get; set; }
+
         public DateTime CreateDate { get; set; }
 
         public ICollection<ArticlePicture> ArticlePictures { get; set; }
             = new List<ArticlePicture>();
 
-        public ICollection<Tag> ArticleTags { get; set; }
-            = new List<Tag>();
+        public ICollection<ArticleTag> Tags { get; set; }
+            = new List<ArticleTag>();
     }
 }

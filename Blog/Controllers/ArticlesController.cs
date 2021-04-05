@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Blog.Dtos;
 using Blog.Models;
 using Blog.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -10,15 +12,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.Controllers
 {
-    [Route("/api/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class ArticleController : ControllerBase
+    public class ArticlesController : ControllerBase
     {
         private IArticleRepository _articleRepository;
+        private readonly IMapper _mapper;
 
-        public ArticleController(IArticleRepository articleRepository)
+        public ArticlesController(IArticleRepository articleRepository, IMapper mapper)
         {
             _articleRepository = articleRepository;
+            _mapper = mapper;
         }
 
 
@@ -30,7 +34,8 @@ namespace Blog.Controllers
             {
                 return NotFound("No Article Found");
             }
-            return Ok(articlesFromRepo);
+            var articles = _mapper.Map<IEnumerable<ArticleDto>>(articlesFromRepo);
+            return Ok(articles);
         }
 
         [HttpGet("{articleId}")]
@@ -41,8 +46,9 @@ namespace Blog.Controllers
             {
                 return NotFound("No Article Found");
             }
-            
-            return Ok(articleFromRepo);
+
+            var articleDto = _mapper.Map<ArticleDto>(articleFromRepo);
+            return Ok(articleDto);
         }
     }
 }

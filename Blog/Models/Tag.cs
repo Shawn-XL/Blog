@@ -15,7 +15,7 @@ namespace Blog.Models
 
         public DateTime CreateDate { get; set; }
 
-        public ICollection<Article> ArticlePictures { get; set; }
-                = new List<Article>();
+        public ICollection<ArticleTag> Articles { get; set; }
+                = new List<ArticleTag>();
     }
 }

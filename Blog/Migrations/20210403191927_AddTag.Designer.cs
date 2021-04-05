@@ -4,20 +4,37 @@ using Blog.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Blog.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210403191927_AddTag")]
+    partial class AddTag
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.4")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("ArticleTag", b =>
+                {
+                    b.Property<Guid>("ArticlePicturesId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ArticleTagsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ArticlePicturesId", "ArticleTagsId");
+
+                    b.HasIndex("ArticleTagsId");
+
+                    b.ToTable("ArticleTag");
+                });
 
             modelBuilder.Entity("Blog.Models.Article", b =>
                 {
@@ -94,21 +111,6 @@ namespace Blog.Migrations
                     b.ToTable("ArticlePictures");
                 });
 
-            modelBuilder.Entity("Blog.Models.ArticleTag", b =>
-                {
-                    b.Property<Guid>("ArticleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("TagId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ArticleId", "TagId");
-
-                    b.HasIndex("TagId");
-
-                    b.ToTable("ArticleTag");
-                });
-
             modelBuilder.Entity("Blog.Models.Tag", b =>
                 {
                     b.Property<int>("Id")
@@ -129,6 +131,21 @@ namespace Blog.Migrations
                     b.ToTable("Tag");
                 });
 
+            modelBuilder.Entity("ArticleTag", b =>
+                {
+                    b.HasOne("Blog.Models.Article", null)
+                        .WithMany()
+                        .HasForeignKey("ArticlePicturesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Blog.Models.Tag", null)
+                        .WithMany()
+                        .HasForeignKey("ArticleTagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Blog.Models.ArticlePicture", b =>
                 {
                     b.HasOne("Blog.Models.Article", "Article")
@@ -140,35 +157,9 @@ namespace Blog.Migrations
                     b.Navigation("Article");
                 });
 
-            modelBuilder.Entity("Blog.Models.ArticleTag", b =>
-                {
-                    b.HasOne("Blog.Models.Article", "Article")
-                        .WithMany("Tags")
-                        .HasForeignKey("ArticleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Blog.Models.Tag", "Tag")
-                        .WithMany("Articles")
-                        .HasForeignKey("TagId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Article");
-
-                    b.Navigation("Tag");
-                });
-
             modelBuilder.Entity("Blog.Models.Article", b =>
                 {
                     b.Navigation("ArticlePictures");
-
-                    b.Navigation("Tags");
-                });
-
-            modelBuilder.Entity("Blog.Models.Tag", b =>
-                {
-                    b.Navigation("Articles");
                 });
 #pragma warning restore 612, 618
         }

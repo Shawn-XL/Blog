@@ -24,5 +24,15 @@ namespace Blog.Services
         {
             return _context.Articles;
         }
+
+        public bool ArticleExists(Guid articleId)
+        {
+            return _context.Articles.Any(t => t.Id == articleId);
+        }
+
+        public List<ArticlePicture> GetPicturesByArticleId(Guid articleId)
+        {
+            return _context.ArticlePictures.Where(p => p.ArticleId == articleId).ToList();
+        }
     }
 }

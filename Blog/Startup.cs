@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Blog.Services;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using System;
 
 namespace Blog
 {
@@ -31,7 +32,7 @@ namespace Blog
             }).AddXmlDataContractSerializerFormatters();
 
             services.AddTransient<IArticleRepository, ArticleRepository>();
-
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
