@@ -27,9 +27,9 @@ namespace Blog.Controllers
 
 
         [HttpGet]
-        public IActionResult GetArticles()
+        public IActionResult GetArticles([FromQuery]string keyword)
         {
-            var articlesFromRepo = _articleRepository.GetArticles();
+            var articlesFromRepo = _articleRepository.GetArticles(keyword);
             if(articlesFromRepo == null || articlesFromRepo.Count() < 0)
             {
                 return NotFound("No Article Found");

@@ -1,5 +1,7 @@
-﻿{
-  "id": 1,
-  "ArticleId": "94bb3b9a-6145-4a4f-833f-86c937c9df90",
-  "url": "./lg.png"
-}
+﻿[
+  {
+    "Id": 1,
+    "ArticleId": "dfff1c6d-0f53-43e7-9d42-599b34adb261",
+    "Url": "./lg.png"
+  }
+]

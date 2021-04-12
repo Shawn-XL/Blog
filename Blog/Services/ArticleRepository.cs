@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using Blog.Database;
 using Blog.Models;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace Blog.Services
 {
@@ -17,12 +21,25 @@ namespace Blog.Services
 
         public Article GetArticle(Guid articleId)
         {
-            return _context.Articles.FirstOrDefault(n => n.Id == articleId);
+            return _context.Articles
+                .Include(a => a.Tags)
+                .Include(a => a.ArticlePictures)
+                .FirstOrDefault(n => n.Id == articleId);
         }
 
-        public IEnumerable<Article> GetArticles()
+        public IEnumerable<Article> GetArticles(string keyword)
         {
-            return _context.Articles;
+            IQueryable<Article> result = _context.Articles
+                .Include(t => t.Tags)
+                .Include(t => t.ArticlePictures);
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                keyword = keyword.Trim();
+                result = result.Where(t => t.Title.Contains(keyword));
+            }
+
+            return result.ToList();
         }
 
         public bool ArticleExists(Guid articleId)
@@ -32,7 +49,99 @@ namespace Blog.Services
 
         public List<ArticlePicture> GetPicturesByArticleId(Guid articleId)
         {
-            return _context.ArticlePictures.Where(p => p.ArticleId == articleId).ToList();
+            return _context.ArticlePictures.Where(p => p.Article.Id == articleId).ToList();
+        }
+
+        public ICollection<Tag> GetTagsByArticleId(Guid articleId)
+        {
+            Console.WriteLine("Id: " + articleId);
+            var result = _context.Articles
+                .Where(p => p.Id == articleId)
+                .Include(p => p.Tags)
+                .Select(p => p.Tags)
+                .FirstOrDefault();
+            return result;
+        }
+
+        public bool SeedingData()
+        {
+            try
+            {
+                Console.WriteLine("Seeding Data begin");
+                var articleJson = File.ReadAllText(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"/Database/Articles.json");
+                List<Article> articles = JsonConvert.DeserializeObject<List<Article>>(articleJson);
+                _context.AddRange(articles);
+
+                _context.AddRange(
+                    new Tag()
+                    {
+                        ArticleTag = "c#",
+                        Articles = articles
+                    },
+                    new Tag()
+                    {
+                        ArticleTag = "asp.net",
+                        Articles = new List<Article>()
+                        {
+                        articles[2]
+                        }
+                    }
+                );
+
+                _context.SaveChanges();
+                return true;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
+            
+        }
+
+        public bool RemoveData()
+        {
+            try
+            {
+                _context.Articles.RemoveRange(_context.Articles.ToList());
+                _context.ArticlePictures.RemoveRange(_context.ArticlePictures.ToList());
+                _context.Tags.RemoveRange(_context.Tags.ToList());
+
+                _context.SaveChanges();
+                return true;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
+
+        }
+
+        public bool AddPictures()
+        {
+            try
+            {
+                using (var transaction = _context.Database.BeginTransaction())
+                {
+                    var articlePictureJson = File.ReadAllText(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"/Database/ArticlePictures.json");
+                    List<ArticlePicture> articlePictures = JsonConvert.DeserializeObject<List<ArticlePicture>>(articlePictureJson);
+                    _context.AddRange(articlePictures);
+                    _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.ArticlePictures ON;");
+                    _context.SaveChanges();
+                    _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.ArticlePictures OFF;");
+
+                    transaction.Commit();
+                }
+
+                return true;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
+
         }
     }
 }

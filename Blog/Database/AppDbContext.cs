@@ -20,29 +20,11 @@ namespace Blog.Database
 
         public DbSet<ArticlePicture> ArticlePictures { get; set; }
 
+        public DbSet<Tag> Tags { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //Seed Data
-            var articleJson = File.ReadAllText(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"/Database/Articles.json");
-            IList<Article> articles = JsonConvert.DeserializeObject<IList<Article>>(articleJson);
-            modelBuilder.Entity<Article>().HasData(articles);
-
-            //Many to Many: Tag and Article
-            modelBuilder.Entity<ArticleTag>()
-                .HasKey(t => new { t.ArticleId, t.TagId });
-
-            modelBuilder
-                .Entity<ArticleTag>()
-                .HasOne(at => at.Article)
-                .WithMany(a => a.Tags)
-                .HasForeignKey(at => at.ArticleId);
-
-            modelBuilder
-                .Entity<ArticleTag>()
-                .HasOne(at => at.Tag)
-                .WithMany(a => a.Articles)
-                .HasForeignKey(at => at.TagId);
-
             base.OnModelCreating(modelBuilder);
         }
 

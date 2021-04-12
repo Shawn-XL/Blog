@@ -4,14 +4,16 @@ using Blog.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Blog.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210410184947_ModifiedTagAndArticle")]
+    partial class ModifiedTagAndArticle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,6 +60,32 @@ namespace Blog.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Articles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("102fc28e-6565-4358-aa1c-46482f392880"),
+                            Content = "Matrix is a rectangular two-dimensional array of numbers arranged in rows and columns. A matrix with m rows and n columns can be called an m × n matrix. Individual entries in the matrix are called elements and can be represented by a[i,j] which suggests that the element a is present in the ith row and jth column.",
+                            CreateDate = new DateTime(2021, 3, 21, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsHide = false,
+                            Title = "What is 2D Array(Matrix)?"
+                        },
+                        new
+                        {
+                            Id = new Guid("dfff1c6d-0f53-43e7-9d42-599b34adb261"),
+                            Content = "wo matrices X and Y can be added if and only if they have the same dimensions that are, the same number of rows and columns. It is not possible to add a 2 × 3 matrix with a 3 × 2 matrix. The addition of two matrices can be performed by adding their corresponding elements as",
+                            CreateDate = new DateTime(2021, 3, 22, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsHide = false,
+                            Title = "Addition of two matrices"
+                        },
+                        new
+                        {
+                            Id = new Guid("94bb3b9a-6145-4a4f-833f-86c937c9df90"),
+                            Content = "SOLID design principles in C# are basic design principles. SOLID stands for Single Responsibility Principle (SRP), Open closed Principle (OSP), Liskov substitution Principle (LSP), Interface Segregation Principle (ISP), and Dependency Inversion Principle (DIP). ",
+                            CreateDate = new DateTime(2021, 3, 23, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsHide = false,
+                            Title = "SOLID Principles In C#"
+                        });
                 });
 
             modelBuilder.Entity("Blog.Models.ArticlePicture", b =>
@@ -90,7 +118,7 @@ namespace Blog.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ArticleTag")
+                    b.Property<string>("Content")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");

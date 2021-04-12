@@ -11,11 +11,11 @@ namespace Blog.Models
 
         [Required]
         [MaxLength(100)]
-        public string Content { get; set; }
+        public string ArticleTag { get; set; }
 
         public DateTime CreateDate { get; set; }
 
-        public ICollection<ArticleTag> Articles { get; set; }
-                = new List<ArticleTag>();
+        public ICollection<Article> Articles { get; set; }
+                = new List<Article>();
     }
 }

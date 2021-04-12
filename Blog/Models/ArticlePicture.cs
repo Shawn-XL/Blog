@@ -14,7 +14,8 @@ namespace Blog.Models
 
         public string BaseSixFour { get; set; }
 
-        [ForeignKey("ArticleId")]
+        [ForeignKey("Article")]
+        [Required]
         public Guid ArticleId { get; set; }
 
         public Article Article { get; set; }

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Blog.Controllers
 {
     [ApiController]
-    [Route("api/article/{articleId}/pictures")]
+    [Route("api/articles/{articleId}/pictures")]
     public class ArticlePicturesController : ControllerBase
     {
         private IArticleRepository _articleRepository;
@@ -24,9 +24,10 @@ namespace Blog.Controllers
         }
 
         [HttpGet]
+        [Route("")]
         public IActionResult GetPictureListByArticleId(Guid articleId)
         {
-            if(_articleRepository.ArticleExists(articleId))
+            if(!_articleRepository.ArticleExists(articleId))
             {
                 return NotFound("Artcile Not Exist");
             }
