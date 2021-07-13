@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace Blog.Dtos
 {
     public class ArticleDto
@@ -9,6 +11,9 @@ namespace Blog.Dtos
 
         public string Content { get; set; }
 
-        public DateTime CreateDate { get; set; }
+        public string CreateDate { get; set; }
+
+        public ICollection<ArticlePictureDto> ArticlePictures { get; set; }
+
     }
 }

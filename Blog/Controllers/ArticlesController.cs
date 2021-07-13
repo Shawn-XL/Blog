@@ -38,7 +38,7 @@ namespace Blog.Controllers
             return Ok(articles);
         }
 
-        [HttpGet("{articleId}")]
+        [HttpGet("{articleId}", Name = "GetArticle")]
         public IActionResult GetArticle(Guid articleId)
         {
             Article articleFromRepo = _articleRepository.GetArticle(articleId);
@@ -49,6 +49,23 @@ namespace Blog.Controllers
 
             var articleDto = _mapper.Map<ArticleDto>(articleFromRepo);
             return Ok(articleDto);
+        }
+
+        [HttpPost]
+        public IActionResult CreateArticle([FromBody] ArticleForCreationDto articleForCreationDto)
+        {
+            var articleModel = _mapper.Map<Article>(articleForCreationDto);
+
+            _articleRepository.AddArticle(articleModel);
+            _articleRepository.Save();
+
+            var articleReturn = _mapper.Map<ArticleDto>(articleModel);
+
+            return CreatedAtRoute(
+                "GetArticle",
+                new { articleId = articleReturn.Id },
+                articleReturn
+                );
         }
     }
 }

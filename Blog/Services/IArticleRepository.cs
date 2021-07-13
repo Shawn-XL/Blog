@@ -14,6 +14,14 @@ namespace Blog.Services
 
         List<ArticlePicture> GetPicturesByArticleId(Guid articleId);
 
+        ArticlePicture GetPicture(int pictureId);
+
+        void AddArticle(Article article);
+
+        void AddArticlePicture(Guid articleId, ArticlePicture articlePicture);
+
+        bool Save();
+
         bool SeedingData();
 
         bool RemoveData();

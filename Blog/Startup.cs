@@ -10,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 using Blog.Services;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using System;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Blog
 {
@@ -25,7 +28,6 @@ namespace Blog
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers(setupAction =>
             {
                 setupAction.ReturnHttpNotAcceptable = true;
@@ -33,6 +35,24 @@ namespace Blog
 
             services.AddTransient<IArticleRepository, ArticleRepository>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            //Auth
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    var scretByte = Encoding.UTF8.GetBytes(Configuration["Authentication:SecretKey"]);
+                    options.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidateIssuer = true,
+                        ValidIssuer = Configuration["Authentication:Issuer"],
+
+                        ValidateAudience = true,
+                        ValidAudience = Configuration["Authentication:Audience"],
+
+                        ValidateLifetime = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(scretByte)
+                    };
+                });
 
 
             // In production, the React files will be served from this directory
@@ -66,6 +86,8 @@ namespace Blog
             app.UseSpaStaticFiles();
 
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

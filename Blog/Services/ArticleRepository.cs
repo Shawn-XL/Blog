@@ -22,7 +22,6 @@ namespace Blog.Services
         public Article GetArticle(Guid articleId)
         {
             return _context.Articles
-                .Include(a => a.Tags)
                 .Include(a => a.ArticlePictures)
                 .FirstOrDefault(n => n.Id == articleId);
         }
@@ -30,7 +29,6 @@ namespace Blog.Services
         public IEnumerable<Article> GetArticles(string keyword)
         {
             IQueryable<Article> result = _context.Articles
-                .Include(t => t.Tags)
                 .Include(t => t.ArticlePictures);
 
             if (!string.IsNullOrWhiteSpace(keyword))
@@ -54,13 +52,49 @@ namespace Blog.Services
 
         public ICollection<Tag> GetTagsByArticleId(Guid articleId)
         {
-            Console.WriteLine("Id: " + articleId);
             var result = _context.Articles
                 .Where(p => p.Id == articleId)
                 .Include(p => p.Tags)
                 .Select(p => p.Tags)
                 .FirstOrDefault();
             return result;
+        }
+
+
+        public ArticlePicture GetPicture(int pictureId)
+        {
+            return _context.ArticlePictures.Where(p => p.Id == pictureId).FirstOrDefault();
+        }
+
+        public void AddArticle(Article article)
+        {
+            if(article == null)
+            {
+                throw new ArgumentNullException(nameof(article));
+            }
+
+            _context.Articles.Add(article);
+        }
+
+        public void AddArticlePicture(Guid articleId, ArticlePicture articlePicture)
+        {
+            if (articleId == Guid.Empty)
+            {
+                throw new ArgumentNullException("Article Id");
+            }
+
+            if(articlePicture == null)
+            {
+                throw new ArgumentNullException(nameof(articlePicture));
+            }
+            articlePicture.ArticleId = articleId;
+            _context.ArticlePictures.Add(articlePicture);
+        }
+
+
+        public bool Save()
+        {
+            return _context.SaveChanges() >= 0;
         }
 
         public bool SeedingData()

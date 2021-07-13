@@ -9,7 +9,21 @@ namespace Blog.Profiles
     {
         public ArticleProfile()
         {
-            CreateMap<Article, ArticleDto>();
+            CreateMap<Article, ArticleDto>()
+                .ForMember(
+                    dest => dest.CreateDate,
+                    opt => opt.MapFrom(src => src.CreateDate.ToString("yyyy MMMM dd")
+                ));
+
+            CreateMap<ArticleForCreationDto, Article>()
+                .ForMember(
+                    dest => dest.Id,
+                    opt => opt.MapFrom(src => Guid.NewGuid())
+                )
+                .ForMember(
+                    dest => dest.CreateDate,
+                    opt => opt.MapFrom(src => DateTime.Now)
+                );
         }
     }
 }

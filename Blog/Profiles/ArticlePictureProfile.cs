@@ -10,6 +10,8 @@ namespace Blog.Profiles
         public ArticlePictureProfile()
         {
             CreateMap<ArticlePicture, ArticlePictureDto>();
+
+            CreateMap<ArticlePictureCreationDto, ArticlePicture>();
         }
     }
 }

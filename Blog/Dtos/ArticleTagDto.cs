@@ -6,7 +6,5 @@ namespace Blog.Dtos
         public int Id { get; set; }
 
         public string ArticleTag { get; set; }
-
-        public DateTime CreateDate { get; set; }
     }
 }

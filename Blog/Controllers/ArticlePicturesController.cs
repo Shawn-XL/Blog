@@ -40,5 +40,45 @@ namespace Blog.Controllers
 
             return Ok(_mapper.Map<List<ArticlePictureDto>>(picturesFromRepo));
         }
+
+        [HttpGet("{pictureId}", Name = "GetPicture")]
+        public IActionResult GetPicture(Guid articleId, int pictureId)
+        {
+            if (!_articleRepository.ArticleExists(articleId))
+            {
+                return NotFound("Artcile Not Exist");
+            }
+
+            var pictureFromRepo = _articleRepository.GetPicture(pictureId);
+
+            if(pictureFromRepo == null)
+            {
+                return NotFound("Picture Not Found");
+            }
+            return Ok(_mapper.Map<ArticlePictureDto>(pictureFromRepo));
+        }
+
+        [HttpPost]
+        public IActionResult CreateArticlePicture(
+            [FromRoute] Guid articleId,
+            [FromBody] ArticlePictureCreationDto articlePictureCreationDto
+            )
+        {
+            if (!_articleRepository.ArticleExists(articleId))
+            {
+                return NotFound("Artcile Not Exist");
+            }
+
+            var pictureModel = _mapper.Map<ArticlePicture>(articlePictureCreationDto);
+            _articleRepository.AddArticlePicture(articleId, pictureModel);
+            _articleRepository.Save();
+
+            var pictureReturn = _mapper.Map<ArticlePictureDto>(pictureModel);
+            return CreatedAtRoute(
+                "GetPicture",
+                new { articleId = pictureModel.ArticleId, pictureId = pictureModel.Id },
+                pictureReturn
+            );
+        }
     }
 }
